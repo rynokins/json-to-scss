@@ -9,6 +9,13 @@
 
 A small utility to convert js & json file(s) to scss/sass file(s).
 
+> [!IMPORTANT]
+> This is a fork of the original library, edited to return the "custom" nested json object from a WordPress theme.json file.
+> Edits:
+> - Expects a "custom" object defined in the theme.json (`_jsObject.settings.custom`)
+> - Converts keys from camelCase to kebab-case
+> - Adds a space between the prefix and the map
+
 ## Motivation
 This library has initially been created to contribute to & facilitate the maintenance of living style guides.
 
@@ -21,7 +28,7 @@ Now, defining & storing design properties in one place is one thing but it is ob
 Developers will find it convenient to work with .js or .json file but what about others and, for example, people interested in leveraging such props in SASS for instance?
 
 This is where _json-to-scss_ comes into play; this is obviously not the first (nor last) conversion tool (see below) but this is mine and I hope that you will find it useful. :)
-  
+
 [Andrew Clark](https://github.com/acdlite)'s [json-sass](https://github.com/acdlite/json-sass) library has been a significant source of inspiration for this version. Feel free to check-it out.
 
 
@@ -44,15 +51,15 @@ Usage: json-to-scss <source> [destination] [options]
 
        source:           the path to a javascript, json or group of files to be converted.
        (required)        - only '.js' and '.json' are processed.
-       
+
        destination:      the full or partial destination of the converted files.
        (optional)        - when the destination is a directory path only, all generated
                            files are saved in it with a default '.scss' extension. If
                            a '.sass' extension is required instead, the --sass option must be included.
 
-                   
+
        options:
-       
+
         --h              (help)           Show this message.
         --p='prefix'     (prefix)         Prepend the converted sass/scss content with the prefix.
                                           Prefix is usually used & set to be used as sass variable name.
@@ -136,7 +143,7 @@ This example shows how to convert a single specific file using the default _json
 ├─ Examples
 │   ├─ Example1
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           └─ myTokens.json
 .   .
 ```
@@ -181,9 +188,9 @@ $       /.../Examples/Example1/ProjectDir/tokens/myTokens.scss
 ├─ Examples
 │   ├─ Example1
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ myTokens.json
-│   │           └─ myTokens.scss 
+│   │           └─ myTokens.scss
 .   .
 ```
 
@@ -219,7 +226,7 @@ Note that when using a glob pattern, the source argument must be wrapped in sing
 ├─ Examples
 │   ├─ Example2
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ colors.js
 │   │           └─ fontSizes.js
 .   .
@@ -267,11 +274,11 @@ $       /.../Examples/Example2/ProjectDir/tokens/fontSizes.scss
 ├─ Examples
 │   ├─ Example2
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ colors.js
 │   │           ├─ colors.js
 │   │           ├─ fontSizes.json
-│   │           └─ fontSizes.scss 
+│   │           └─ fontSizes.scss
 .   .
 ```
 
@@ -312,7 +319,7 @@ Additionally, we will ask _json-to-scss_ to use a tab text (_--tt option_) such 
 ├─ Examples
 │   ├─ Example3
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ colors.js
 │   │           └─ fontSizes.js
 .   .
@@ -338,10 +345,10 @@ $       /.../Examples/Example3/ProjectDir/sass/fontSizes.sass
 ├─ Examples
 │   ├─ Example3
 │   │   └─ ProjectDir
-│   │       ├─ sass 
+│   │       ├─ sass
 │   │       │    ├─ colors.sass
 │   │       │    └─ fontSizes.sass
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ colors.js
 │   │           └─ fontSizes.js
 .   .
@@ -351,7 +358,7 @@ $       /.../Examples/Example3/ProjectDir/sass/fontSizes.sass
 ###### /sass/colors.sass
 
 ```sass
-$colors: (colors: (primary-color: #FFFFFF, accent-color: #0099FF)) 
+$colors: (colors: (primary-color: #FFFFFF, accent-color: #0099FF))
 ```
 
 ###### /sass/fontSizes.sass
@@ -377,7 +384,7 @@ As you will see, this local config will overwrite/supersede the default & comman
 ├─ Examples
 │   ├─ Example4
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           └─ myTokens.json
 .   .
 ```
@@ -406,7 +413,7 @@ As you will see, this local config will overwrite/supersede the default & comman
     "small": ".875rem",
     "medium": "1rem",
     "large": "2rem"
-    
+
   },
   "example-of-empty-string": "",
   "web-browser-default-font-size": "16px"
@@ -419,26 +426,26 @@ This object is treated as a local conversion configuration; let us see what prop
 
 - **sassVariableName**
   - this tells _json-to-scss_ to prefix the converted content using `__example-4`. Notice here that you do not need to include the `$` character since _json-to-scss_ will automatically insert it for you.
-  
+
   - **notes:**
     - this feature only exists in the context of local config and there is therefore no direct equivalent option at the command line level; the command line option which could potentially yield similar results is `--prefix`.
     - when specified, the `"sassVariableName"` property value takes precedence over the `"prefix"` property value (and therefore equivalent command line option `--prefix`).
 
 - **filename**
-  - this informs _json-to-scss_ that the destination file will have to be renamed ("myTokensRenamed" in this example); any specified extension will be ignored. 
+  - this informs _json-to-scss_ that the destination file will have to be renamed ("myTokensRenamed" in this example); any specified extension will be ignored.
 
 - **prefix**
   - allows one to define or locally override the content prefix. In this example, the "garbage" value will be ignored due to the definition of **sassVariableName** in the same local configuration.
 
 - **suffix**
-  - allows one to define or locally override the content suffix. In this example, "; // an scss comment." will be appended to "myTokens.json" converted content.  
+  - allows one to define or locally override the content suffix. In this example, "; // an scss comment." will be appended to "myTokens.json" converted content.
 
 - **emptyString**
   - tells _json-to-scss_ how to format sass values equal to empty strings. By default and here too, empty string values are represented as `''` (two single quotes)
 
 - **indentationText**
   - specifies the portion of text to be used as indentation "space". Here, `"  "` (two white spaces) is set as the indentation text.
-  
+
 - **indentationSize**
   - indicates the number of indentation "space"(s) which must be used when indenting content; in our example, since the value is 2, it will indent nested sass maps/values with 2 "space" text chunks per indentation level.
 
@@ -449,7 +456,7 @@ This object is treated as a local conversion configuration; let us see what prop
   - allows one to force sass map keys to be wrapped (or not - use "auto") in single (use "sq") or double quote (use "dq").
 
 - **valueFormat**
-  - allows one to force sass map values to be wrapped (or not - use "auto") in single (use "sq") or double quote (use "dq"). 
+  - allows one to force sass map values to be wrapped (or not - use "auto") in single (use "sq") or double quote (use "dq").
 
 ##### Command:
 
@@ -469,9 +476,9 @@ $       /.../Examples/Example4/ProjectDir/tokens/myTokensRenamed.scss
 ├─ Examples
 │   ├─ Example4
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ myTokens.json
-│   │           └─ myTokensRenamed.scss 
+│   │           └─ myTokensRenamed.scss
 .   .
 ```
 
@@ -519,7 +526,7 @@ The destination file extension is important here as this is thanks to it that _j
 ├─ Examples
 │   ├─ Example5
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ colors.js
 │   │           └─ fontSizes.js
 .   .
@@ -545,9 +552,9 @@ $       /.../Examples/Example5/ProjectDir/scss/mergedTokenFiles.scss
 ├─ Examples
 │   ├─ Example5
 │   │   └─ ProjectDir
-│   │       ├─ scss 
+│   │       ├─ scss
 │   │       │   └─ mergedTokenFiles.scss
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ colors.js
 │   │           └─ fontSizes.js
 .   .
@@ -583,7 +590,7 @@ Note that in addition to specifying one specific destination file, we are using 
 ├─ Examples
 │   ├─ Example5
 │   │   └─ ProjectDir
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ colors.js
 │   │           └─ fontSizes.js
 .   .
@@ -608,9 +615,9 @@ $       /.../Examples/Example5/ProjectDir/scss/mergedTokenFilesAndObjects.scss
 ├─ Examples
 │   ├─ Example5
 │   │   └─ ProjectDir
-│   │       ├─ scss 
+│   │       ├─ scss
 │   │       │   └─ mergedTokenFilesAndObjects.scss
-│   │       └─ tokens 
+│   │       └─ tokens
 │   │           ├─ colors.js
 │   │           └─ fontSizes.js
 .   .
