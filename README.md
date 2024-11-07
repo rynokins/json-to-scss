@@ -15,6 +15,7 @@ A small utility to convert js & json file(s) to scss/sass file(s).
 > - Expects a "custom" object defined in the theme.json (`_jsObject.settings.custom`)
 > - Converts keys from camelCase to kebab-case
 > - Adds a space between the prefix and the map
+> - Adds support for "breakpoints" object, values are not quoted
 
 ## Motivation
 This library has initially been created to contribute to & facilitate the maintenance of living style guides.
